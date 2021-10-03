@@ -18,6 +18,31 @@ printRegister macro register
 	pop ax
 endm
 
+ImprimirEspacio macro registro
+	push ax
+	push dx
+	
+	mov registro, 13
+	CrearEspacio al
+	mov registro, 10
+	CrearEspacio al
+	
+	pop dx
+	pop ax
+endm
+
+CrearEspacio macro registro
+	push ax
+	push dx
+	
+	mov dl,registro
+	mov ah,02h
+	int 21h
+	
+	pop dx
+	pop ax
+endm
+
 readUntilEnter macro entrada
     local salto, fin
 

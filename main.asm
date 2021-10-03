@@ -15,8 +15,10 @@ include archivos.asm
     bufferKey db 50 dup("$"), "$"
     container db 500 dup("$"), "$"            ; Guardar lectura
     totalDipt db "El total de diptongos es: $"
+    totalHiato db "El total de hiatos es: $"
     newWord db 50 dup("$"), "$"
     counter db 0
+    counterHiato db 0
     handle dw ?
 .code
     ;description
@@ -51,6 +53,7 @@ include archivos.asm
         xor si, si
         mov di, 7d
         mov counter, 0
+        mov counterHiato, 0
         ciclo:
             xor ax, ax
             mov al, bufferRoute[di]
@@ -79,11 +82,33 @@ include archivos.asm
                 inc si
                 cmp ah, "$"
                 jne ciclo2
+
+        xor si, si
+        ciclo3:
+            xor ax, ax
+            mov al, newWord[si]
+            mov ah, newWord[si+1]
+            cmp al, ah
+            je isHiato
+            returnIsHiato:
+            inc si
+            cmp ah, "$"
+            jne ciclo3
+
         print totalDipt
         mov bl, counter
         printRegister bl
+        ImprimirEspacio al
+        print totalHiato
+        mov bh, counterHiato
+        printRegister bh
+        
         readUntilEnter bufferKey
         jmp menu
+
+    isHiato:
+        add counterHiato, 1
+        jmp returnIsHiato
 
     diptCresc:
         cmp ah, "a"
@@ -91,6 +116,10 @@ include archivos.asm
         cmp ah, "e"
         je isDipt
         cmp ah, "o"
+        je isDipt
+        cmp ah, "i"
+        je isDipt
+        cmp ah, "u"
         je isDipt
         jmp returnDiptCresc
 
@@ -101,7 +130,17 @@ include archivos.asm
         je isDipt
         jmp returnDiptCresc
 
+    dipHomo:
+        cmp ah, "u"
+        je isDipt
+        cmp ah, "i"
+        je isDipt
+
     isDipt:
+        add counter, 1
+        jmp returnDiptCresc
+
+    isHomo:
         add counter, 1
         jmp returnDiptCresc
 
