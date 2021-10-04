@@ -19,7 +19,11 @@ include archivos.asm
     totalTript db "El total de triptongos es: $"
     theWord db "La palabra $"
     msgIsDipt db " si es diptongo $"
+    msgIsTript db " si es triptongo $"
+    msgIsHiato db " si es hiato $"
     msgIsNotDipt db " no es diptongo $"
+    msgIsNotTript db " no es triptongo $"
+    msgIsNotHiato db " no es hiato $"
     newWord db 50 dup("$"), "$"
     counter db 0
     counterHiato db 0
@@ -46,6 +50,10 @@ include archivos.asm
             je countDipt
             cmp bufferRoute[0], 'd'
             je diptWord
+            cmp bufferRoute[0], 't'
+            je triptWord
+            cmp bufferRoute[0], 'h'
+            je hiatoWord
             jmp menu
 
     fileUpload:
@@ -91,6 +99,42 @@ include archivos.asm
         print theWord
         print newWord
         print msgIsDipt
+        readUntilEnter bufferKey
+        jmp menu
+
+    triptWord:
+        descomposeWords 10d
+        iterateWord
+        cmp counterTript, 0
+        jne verifyTript
+        print theWord
+        print newWord
+        print msgIsNotTript
+        readUntilEnter bufferKey
+        jmp menu
+
+    verifyTript:
+        print theWord
+        print newWord
+        print msgIsTript
+        readUntilEnter bufferKey
+        jmp menu
+
+    hiatoWord:
+        descomposeWords 6d
+        iterateWord
+        cmp counterHiato, 0
+        jne verifyHiato
+        print theWord
+        print newWord
+        print msgIsNotHiato
+        readUntilEnter bufferKey
+        jmp menu
+
+    verifyHiato:
+        print theWord
+        print newWord
+        print msgIsHiato
         readUntilEnter bufferKey
         jmp menu
 
