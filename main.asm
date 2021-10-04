@@ -16,9 +16,11 @@ include archivos.asm
     container db 500 dup("$"), "$"            ; Guardar lectura
     totalDipt db "El total de diptongos es: $"
     totalHiato db "El total de hiatos es: $"
+    totalTript db "El total de triptongos es: $"
     newWord db 50 dup("$"), "$"
     counter db 0
     counterHiato db 0
+    counterTript db 0
     handle dw ?
 .code
     ;description
@@ -54,6 +56,7 @@ include archivos.asm
         mov di, 7d
         mov counter, 0
         mov counterHiato, 0
+        mov counterTript, 0
         ciclo:
             xor ax, ax
             mov al, bufferRoute[di]
@@ -68,6 +71,7 @@ include archivos.asm
             xor ax, ax
             mov al, newWord[si]
             mov ah, newWord[si+1]
+            mov bl, newWord[si+2]
             cmp al, "i"
             je diptCresc
             cmp al, "u"
@@ -82,6 +86,10 @@ include archivos.asm
                 inc si
                 cmp ah, "$"
                 jne ciclo2
+            returnIsTript:
+                add si, 2d
+                cmp newWord[si+1], "$"
+                jne ciclo2
 
         xor si, si
         ciclo3:
@@ -95,6 +103,7 @@ include archivos.asm
             cmp ah, "$"
             jne ciclo3
 
+        xor bx, bx
         print totalDipt
         mov bl, counter
         printRegister bl
@@ -102,21 +111,21 @@ include archivos.asm
         print totalHiato
         mov bh, counterHiato
         printRegister bh
+        ImprimirEspacio al
+        print totalTript
+        mov cl, counterTript
+        printRegister cl
         
         readUntilEnter bufferKey
         jmp menu
 
-    isHiato:
-        add counterHiato, 1
-        jmp returnIsHiato
-
     diptCresc:
         cmp ah, "a"
-        je isDipt
+        je verifyThirdLetter
         cmp ah, "e"
-        je isDipt
+        je verifyThirdLetter
         cmp ah, "o"
-        je isDipt
+        je verifyThirdLetter
         cmp ah, "i"
         je isDipt
         cmp ah, "u"
@@ -135,6 +144,21 @@ include archivos.asm
         je isDipt
         cmp ah, "i"
         je isDipt
+
+    verifyThirdLetter:
+        cmp bl, "i"
+        je isTript
+        cmp bl, "u"
+        je isTript
+        jmp isDipt
+
+    isTript:
+        add counterTript, 1
+        jmp returnIsTript
+
+    isHiato:
+        add counterHiato, 1
+        jmp returnIsHiato
 
     isDipt:
         add counter, 1
