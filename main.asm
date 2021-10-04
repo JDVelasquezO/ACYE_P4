@@ -91,18 +91,6 @@ include archivos.asm
                 cmp newWord[si+1], "$"
                 jne ciclo2
 
-        xor si, si
-        ciclo3:
-            xor ax, ax
-            mov al, newWord[si]
-            mov ah, newWord[si+1]
-            cmp al, ah
-            je isHiato
-            returnIsHiato:
-            inc si
-            cmp ah, "$"
-            jne ciclo3
-
         xor bx, bx
         print totalDipt
         mov bl, counter
@@ -137,6 +125,12 @@ include archivos.asm
         je isDipt
         cmp ah, "u"
         je isDipt
+        cmp ah, "e"
+        je isHiato
+        cmp ah, "o"
+        je isHiato
+        cmp ah, "a"
+        je isHiato
         jmp returnDiptCresc
 
     dipHomo:
@@ -158,7 +152,7 @@ include archivos.asm
 
     isHiato:
         add counterHiato, 1
-        jmp returnIsHiato
+        jmp returnDiptCresc
 
     isDipt:
         add counter, 1
