@@ -17,6 +17,9 @@ include archivos.asm
     totalDipt db "El total de diptongos es: $"
     totalHiato db "El total de hiatos es: $"
     totalTript db "El total de triptongos es: $"
+    theWord db "La palabra $"
+    msgIsDipt db " si es diptongo $"
+    msgIsNotDipt db " no es diptongo $"
     newWord db 50 dup("$"), "$"
     counter db 0
     counterHiato db 0
@@ -37,10 +40,12 @@ include archivos.asm
 
             cmp bufferRoute[0], 'x'
             je exitGame
-            cmp bufferRoute[0], 'a'
+            cmp bufferRoute[0], 'r'
             je fileUpload
             cmp bufferRoute[0], 'c'
             je countDipt
+            cmp bufferRoute[0], 'd'
+            je diptWord
             jmp menu
 
     fileUpload:
@@ -51,47 +56,11 @@ include archivos.asm
         jmp menu
 
     countDipt:
-        xor di, di
-        xor si, si
-        mov di, 7d
-        mov counter, 0
-        mov counterHiato, 0
-        mov counterTript, 0
-        ciclo:
-            xor ax, ax
-            mov al, bufferRoute[di]
-            mov newWord[si], al
-            inc di
-            inc si
-            cmp bufferRoute[di], "$"
-            jne ciclo
-
-        xor si, si
-        ciclo2:
-            xor ax, ax
-            mov al, newWord[si]
-            mov ah, newWord[si+1]
-            mov bl, newWord[si+2]
-            cmp al, "i"
-            je diptCresc
-            cmp al, "u"
-            je diptCresc
-            cmp al, "a"
-            je diptDec
-            cmp al, "e"
-            je diptDec
-            cmp al, "o"
-            je diptDec
-            returnDiptCresc:
-                inc si
-                cmp ah, "$"
-                jne ciclo2
-            returnIsTript:
-                add si, 2d
-                cmp newWord[si+1], "$"
-                jne ciclo2
+        descomposeWords 7d
+        iterateWord
 
         xor bx, bx
+        xor cx, cx
         print totalDipt
         mov bl, counter
         printRegister bl
@@ -107,60 +76,23 @@ include archivos.asm
         readUntilEnter bufferKey
         jmp menu
 
-    diptCresc:
-        cmp ah, "a"
-        je verifyThirdLetter
-        cmp ah, "e"
-        je verifyThirdLetter
-        cmp ah, "o"
-        je verifyThirdLetter
-        cmp ah, "i"
-        je isDipt
-        cmp ah, "u"
-        je isDipt
-        jmp returnDiptCresc
+    diptWord:
+        descomposeWords 9d
+        iterateWord
+        cmp counter, 0
+        jne verifyDipt
+        print theWord
+        print newWord
+        print msgIsNotDipt
+        readUntilEnter bufferKey
+        jmp menu
 
-    diptDec:
-        cmp ah, "i"
-        je isDipt
-        cmp ah, "u"
-        je isDipt
-        cmp ah, "e"
-        je isHiato
-        cmp ah, "o"
-        je isHiato
-        cmp ah, "a"
-        je isHiato
-        jmp returnDiptCresc
-
-    dipHomo:
-        cmp ah, "u"
-        je isDipt
-        cmp ah, "i"
-        je isDipt
-
-    verifyThirdLetter:
-        cmp bl, "i"
-        je isTript
-        cmp bl, "u"
-        je isTript
-        jmp isDipt
-
-    isTript:
-        add counterTript, 1
-        jmp returnIsTript
-
-    isHiato:
-        add counterHiato, 1
-        jmp returnDiptCresc
-
-    isDipt:
-        add counter, 1
-        jmp returnDiptCresc
-
-    isHomo:
-        add counter, 1
-        jmp returnDiptCresc
+    verifyDipt:
+        print theWord
+        print newWord
+        print msgIsDipt
+        readUntilEnter bufferKey
+        jmp menu
 
     exitGame:
         mov ax, 4C00H

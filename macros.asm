@@ -173,8 +173,118 @@ ImprimirCadena macro cadena
 	INT 21H
 endm
 
-ClearConsole MACRO
-    mov ah, 0 ; ACTIVAR CAMBIO DE VIDEO
-    mov al, 3h ; TIPO DE VIDEO
-    int 10h
+descomposeWords MACRO index
+    local ciclo, cleanWord
+
+    xor di, di
+    xor si, si
+    mov di, index
+    mov counter, 0
+    mov counterHiato, 0
+    mov counterTript, 0
+    
+    cleanWord:
+        mov newWord[si], "$"
+        inc si
+        cmp si, 50
+        jne cleanWord
+
+    xor si, si
+    ciclo:
+        xor ax, ax
+        mov al, bufferRoute[di]
+        mov newWord[si], al
+        inc di
+        inc si
+        cmp bufferRoute[di], "$"
+        jne ciclo
+ENDM
+
+iterateWord MACRO
+    local ciclo2, returnDiptCresc, returnIsTript, diptCresc, diptDec, dipHomo, verifyThirdLetter, isTript, isDipt, isHiato, isHomo, fin
+
+    xor si, si
+    ciclo2:
+        xor ax, ax
+        xor bx, bx
+
+        mov al, newWord[si]
+        mov ah, newWord[si+1]
+        mov bl, newWord[si+2]
+        cmp al, "i"
+        je diptCresc
+        cmp al, "u"
+        je diptCresc
+        cmp al, "a"
+        je diptDec
+        cmp al, "e"
+        je diptDec
+        cmp al, "o"
+        je diptDec
+        returnDiptCresc:
+            inc si
+            cmp ah, "$"
+            jne ciclo2
+        returnIsTript:
+            add si, 2d
+            cmp newWord[si+1], "$"
+            jne ciclo2
+            jmp fin
+
+    diptCresc:
+        cmp ah, "a"
+        je verifyThirdLetter
+        cmp ah, "e"
+        je verifyThirdLetter
+        cmp ah, "o"
+        je verifyThirdLetter
+        cmp ah, "i"
+        je isDipt
+        cmp ah, "u"
+        je isDipt
+        jmp returnDiptCresc
+
+    diptDec:
+        cmp ah, "i"
+        je isDipt
+        cmp ah, "u"
+        je isDipt
+        cmp ah, "e"
+        je isHiato
+        cmp ah, "o"
+        je isHiato
+        cmp ah, "a"
+        je isHiato
+        jmp returnDiptCresc
+
+    dipHomo:
+        cmp ah, "u"
+        je isDipt
+        cmp ah, "i"
+        je isDipt
+
+    verifyThirdLetter:
+        cmp bl, "i"
+        je isTript
+        cmp bl, "u"
+        je isTript
+        jmp isDipt
+
+    isTript:
+        add counterTript, 1
+        jmp returnIsTript
+
+    isHiato:
+        add counterHiato, 1
+        jmp returnDiptCresc
+
+    isDipt:
+        add counter, 1
+        jmp returnDiptCresc
+
+    isHomo:
+        add counter, 1
+        jmp returnDiptCresc
+
+    fin:
 ENDM
