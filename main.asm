@@ -18,17 +18,23 @@ include archivos.asm
     totalHiato db "El total de hiatos es: $"
     totalTript db "El total de triptongos es: $"
     theWord db "La palabra $"
-    msgIsDipt db " si es diptongo $"
+    msgIsDiptCrec db " es diptongo tipo creciente $"
+    msgIsDiptDec db " es diptongo tipo decreciente $"
+    msgIsDiptHomo db " es diptongo tipo homogeneo $"
     msgIsTript db " si es triptongo $"
     msgIsHiato db " si es hiato $"
     msgIsNotDipt db " no es diptongo $"
     msgIsNotTript db " no es triptongo $"
     msgIsNotHiato db " no es hiato $"
+    test_info db "Test aqui $"
     newWord db 50 dup("$"), "$"
     counter db 0
     counterHiato db 0
     counterTript db 0
     handle dw ?
+    isDiptCrec db 0
+    isDiptDec db 0
+    isDiptHomo db 0
 .code
     ;description
     main PROC
@@ -87,8 +93,10 @@ include archivos.asm
     diptWord:
         descomposeWords 9d
         iterateWord
+        
         cmp counter, 0
         jne verifyDipt
+
         print theWord
         print newWord
         print msgIsNotDipt
@@ -98,9 +106,30 @@ include archivos.asm
     verifyDipt:
         print theWord
         print newWord
-        print msgIsDipt
+        
+        cmp isDiptCrec, 1
+        je verifyIsDiptCrec
+        cmp isDiptDec, 1
+        je verifyIsDiptDec
+        cmp isDiptHomo, 1
+        je verifyIsDiptHomo
+        print msgIsNotDipt
+
+        returnVerifyDipt:
         readUntilEnter bufferKey
         jmp menu
+
+    verifyIsDiptCrec:
+        print msgIsDiptCrec
+        jmp returnVerifyDipt
+
+    verifyIsDiptDec:
+        print msgIsDiptDec
+        jmp returnVerifyDipt
+
+    verifyIsDiptHomo:
+        print msgIsDiptHomo
+        jmp returnVerifyDipt
 
     triptWord:
         descomposeWords 10d

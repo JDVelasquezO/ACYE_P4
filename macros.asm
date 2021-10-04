@@ -182,7 +182,6 @@ descomposeWords MACRO index
     mov counter, 0
     mov counterHiato, 0
     mov counterTript, 0
-    
     cleanWord:
         mov newWord[si], "$"
         inc si
@@ -201,7 +200,11 @@ descomposeWords MACRO index
 ENDM
 
 iterateWord MACRO
-    local ciclo2, returnDiptCresc, returnIsTript, diptCresc, diptDec, dipHomo, verifyThirdLetter, isTript, isDipt, isHiato, isHomo, fin
+    local ciclo2, returnDiptCresc, returnIsTript, diptCresc, diptDec, dipHomo, verifyThirdLetter, isTript, isDipt, isHiato, isHomo, fin, addCounterDiptCrec
+
+    mov isDiptCrec, 0
+    mov isDiptDec, 0
+    mov isDiptHomo, 0
 
     xor si, si
     ciclo2:
@@ -211,6 +214,10 @@ iterateWord MACRO
         mov al, newWord[si]
         mov ah, newWord[si+1]
         mov bl, newWord[si+2]
+
+        cmp ah, "$"
+        je fin
+
         cmp al, "i"
         je diptCresc
         cmp al, "u"
@@ -221,10 +228,12 @@ iterateWord MACRO
         je diptDec
         cmp al, "o"
         je diptDec
+        
         returnDiptCresc:
             inc si
             cmp ah, "$"
             jne ciclo2
+            jmp fin
         returnIsTript:
             add si, 2d
             cmp newWord[si+1], "$"
@@ -239,12 +248,13 @@ iterateWord MACRO
         cmp ah, "o"
         je verifyThirdLetter
         cmp ah, "i"
-        je isDipt
+        je dipHomo
         cmp ah, "u"
-        je isDipt
+        je dipHomo
         jmp returnDiptCresc
 
     diptDec:
+        mov isDiptDec, 1
         cmp ah, "i"
         je isDipt
         cmp ah, "u"
@@ -258,6 +268,7 @@ iterateWord MACRO
         jmp returnDiptCresc
 
     dipHomo:
+        mov isDiptHomo, 1
         cmp ah, "u"
         je isDipt
         cmp ah, "i"
@@ -268,7 +279,7 @@ iterateWord MACRO
         je isTript
         cmp bl, "u"
         je isTript
-        jmp isDipt
+        jmp addCounterDiptCrec
 
     isTript:
         add counterTript, 1
@@ -277,6 +288,10 @@ iterateWord MACRO
     isHiato:
         add counterHiato, 1
         jmp returnDiptCresc
+
+    addCounterDiptCrec:
+        mov isDiptCrec, 1
+        jmp isDipt
 
     isDipt:
         add counter, 1
