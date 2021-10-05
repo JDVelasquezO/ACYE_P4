@@ -1,8 +1,14 @@
 print macro string
 
+    push ax
+    push dx
+
     mov dx, offset string		; mover donde empieza el mensaje
 	mov ah, 09h 				; Para imprimir un caracter en pantalla
 	INT 21H
+
+    pop dx
+    pop ax
 endm
 
 printRegister macro register

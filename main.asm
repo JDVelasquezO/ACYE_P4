@@ -2,7 +2,7 @@ include macros.asm
 include archivos.asm
 
 .model small
-.stack 64h
+.stack 100h
 .data
     headers db 	0ah,0dh,'Universidad de San Carlos de Guatemala',
                 0ah,0dh,'Arquitectura de Computadores y Ensambladores 1',
@@ -11,9 +11,9 @@ include archivos.asm
                 0ah,0dh,'Ingrese x si desea cerrar el programa',
                 0ah,0dh,'$'
 
-    bufferRoute db 50 dup("$"), "$"
+    bufferRoute db 50 dup("$"), 0
     bufferKey db 50 dup("$"), "$"
-    container db 500 dup("$"), "$"            ; Guardar lectura
+    bufferFile db 10000 dup("$"), "$"            ; Guardar lectura
     totalDipt db "El total de diptongos es: $"
     totalHiato db "El total de hiatos es: $"
     totalTript db "El total de triptongos es: $"
@@ -31,7 +31,7 @@ include archivos.asm
     counter db 0
     counterHiato db 0
     counterTript db 0
-    handle dw ?
+    handle dw ?, 0
     isDiptCrec db 0
     isDiptDec db 0
     isDiptHomo db 0
@@ -50,7 +50,7 @@ include archivos.asm
 
             cmp bufferRoute[0], 'x'
             je exitGame
-            cmp bufferRoute[0], 'r'
+            cmp bufferRoute[0], 't'
             je fileUpload
             cmp bufferRoute[0], 'c'
             je countDipt
@@ -63,10 +63,11 @@ include archivos.asm
             jmp menu
 
     fileUpload:
-        OpenFile bufferRoute, handle
-        ReadFile handle, container, 500
-        CloseFile handle
-        print container
+        openFile bufferRoute
+        readFile
+        closeFile
+        print bufferFile
+        readUntilEnter bufferKey
         jmp menu
 
     countDipt:

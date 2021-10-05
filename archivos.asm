@@ -1,26 +1,23 @@
 ;============= Abrir archivo===========================
-OpenFile macro buffer,handler
-    local erro,fini
-    mov AX,@data
-    mov DS,AX
-    mov ah,3dh
-    mov al,02h
-    lea dx,buffer
-    int 21h
-    ;jc Erro ; db con mensaje que debe existir en doc maestro
-    mov handler,ax
-    mov ax,0
-    ;jmp fini
-    erro:
-    ;Print TItuloErrorArchivo
-    mov ax,1
-    fini:
-endm
+; OpenFile macro buffer,handler
+;     local erro,fini
+;     mov AX,@data
+;     mov DS,AX
+;     mov ah,3dh
+;     mov al,02h
+;     lea dx,buffer
+;     int 21h
+;     ;jc Erro ; db con mensaje que debe existir en doc maestro
+;     mov handler,ax
+;     mov ax,0
+;     ;jmp fini
+;     erro:
+;     ;Print TItuloErrorArchivo
+;     mov ax,1
+;     fini:
+; endm
 ;============== MACRO CERRAR ARCHIVO==============
 CloseFile macro handler
-;mov checkopenfile,1
-    mov AX,@data
-    mov DS,AX
     mov ah,3eh
     mov bx,handler
     int 21h
@@ -28,16 +25,16 @@ CloseFile macro handler
 endm
 
 ;=========== MACRO LEER ARCHIVO===========
-ReadFile macro handler,array,numbytes
-    mov AX,@data
-    mov DS,AX
-    mov ah,3fh
-    mov bx,handler
-    mov cx,numbytes ; numero maximo de bytes a leer(para proyectos hacerlo gigante) 
-    lea dx,array
-    int 21h
-;jc Error4 ; db con mensaje que debe existir en doc maestro
-endm
+; ReadFile macro handler,array,numbytes
+;     mov AX,@data
+;     mov DS,AX
+;     mov ah,3fh
+;     mov bx,handler
+;     mov cx,numbytes ; numero maximo de bytes a leer(para proyectos hacerlo gigante) 
+;     lea dx,array
+;     int 21h
+; ;jc Error4 ; db con mensaje que debe existir en doc maestro
+; endm
 
 ; pendiente el de crear escribir
 ;======================== MACRO CREAR ARCHIVO (any extension) ===================
@@ -64,3 +61,35 @@ WriteFile macro handler,buffer,numbytes
     lea dx, buffer
     int 21h
 endm
+
+; NUEVOS METODOS
+openFile macro name
+
+    mov handle, 0000h
+
+    mov ah, 3dh
+    mov al, 000b
+    lea dx, name
+    int 21h
+
+    mov handle, ax                      ;handle is a global variable
+
+ENDM
+
+readFile macro
+
+    mov ah, 3fh
+    mov bx, handle                      ;handle is a global variable
+    mov cx, LENGTHOF bufferFile
+    lea dx, bufferFile                  ;bufferFile is a global variable
+    int 21h
+
+ENDM
+
+closeFile macro
+
+    mov ah, 3eh
+    mov bx, handle                      ;handle is a global variable
+    int 21h
+
+ENDM
