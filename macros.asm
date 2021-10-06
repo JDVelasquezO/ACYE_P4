@@ -173,6 +173,42 @@ printRegister macro register
 	pop ax
 endm
 
+ImprimirNumero macro registro
+    push ax
+    push dx
+
+
+    mov dl,registro
+    ;ah = 2
+    add dl,48
+    mov ah,02h
+    int 21h
+
+
+    pop dx
+    pop ax
+endm
+
+Imprimir8bits macro registro
+    local cualquiera,noz
+    xor ax,ax
+    mov al,registro
+    mov cx,10
+    mov bx,3
+    cualquiera:
+    xor dx,dx
+    div cx
+    push dx
+    dec bx
+    jnz cualquiera
+    mov bx,3
+    noz:
+    pop dx
+    ImprimirNumero dl
+    dec bx
+    jnz noz
+endm
+
 ImprimirCadena macro cadena
 	mov dx, offset cadena		; mover donde empieza el mensaje
 	mov ah, 09h 				; Para imprimir un caracter en pantalla

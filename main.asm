@@ -108,7 +108,7 @@ include archivos.asm
 
             print totalDipt
             mov bl, counter
-            printRegister bl
+            Imprimir8bits bl
             readUntilEnter bufferKey
         jmp menu
 
