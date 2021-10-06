@@ -205,7 +205,7 @@ descomposeWords MACRO index
         jne ciclo
 ENDM
 
-iterateWord MACRO
+iterateWord MACRO wordInd
     local ciclo2, returnDiptCresc, returnIsTript, diptCresc, diptDec, dipHomo, verifyThirdLetter, isTript, isDipt, isHiato, isHomo, fin, addCounterDiptCrec
 
     mov isDiptCrec, 0
@@ -217,11 +217,11 @@ iterateWord MACRO
         xor ax, ax
         xor bx, bx
 
-        mov al, newWord[si]
-        mov ah, newWord[si+1]
-        mov bl, newWord[si+2]
+        mov al, wordInd[si]
+        mov ah, wordInd[si+1]
+        mov bl, wordInd[si+2]
 
-        cmp ah, "$"
+        cmp ah, 24h
         je fin
 
         cmp al, "i"
@@ -237,12 +237,12 @@ iterateWord MACRO
         
         returnDiptCresc:
             inc si
-            cmp ah, "$"
+            cmp ah, 24h
             jne ciclo2
             jmp fin
         returnIsTript:
             add si, 2d
-            cmp newWord[si+1], "$"
+            cmp wordInd[si+1], 24h
             jne ciclo2
             jmp fin
 
@@ -308,4 +308,27 @@ iterateWord MACRO
         jmp returnDiptCresc
 
     fin:
+ENDM
+
+clearBuffer macro buffer
+
+    push di
+    push cx
+    push ax
+
+    xor ax, ax
+    xor di, di
+    xor cx, cx
+   
+    MOV al, 24h
+
+    LEA di, buffer
+    MOV cx, LENGTHOF buffer
+    CLD
+    REP stosb
+
+    pop ax
+    pop cx
+    pop di
+
 ENDM

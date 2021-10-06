@@ -13,7 +13,8 @@ include archivos.asm
 
     bufferRoute db 50 dup("$"), 0
     bufferKey db 50 dup("$"), "$"
-    bufferFile db 10000 dup("$"), "$"            ; Guardar lectura
+    bufferFile db 1000 dup("$"), "$"            ; Guardar lectura
+    wordIndividual db 50 dup("$"), "$"
     totalDipt db "El total de diptongos es: $"
     totalHiato db "El total de hiatos es: $"
     totalTript db "El total de triptongos es: $"
@@ -31,6 +32,7 @@ include archivos.asm
     counter db 0
     counterHiato db 0
     counterTript db 0
+    counterDipt db 0
     handle dw ?, 0
     isDiptCrec db 0
     isDiptDec db 0
@@ -42,7 +44,6 @@ include archivos.asm
         mov ds, ax
         mov es, ax  ; Le mandamos al segmento data extra el inicio del segmento de datos
 
-
         menu:
             clearTerminal
             print headers
@@ -50,10 +51,10 @@ include archivos.asm
 
             cmp bufferRoute[0], 'x'
             je exitGame
-            cmp bufferRoute[0], 't'
+            cmp bufferRoute[0], 'a'
             je fileUpload
             cmp bufferRoute[0], 'c'
-            je countDipt
+            je count
             cmp bufferRoute[0], 'd'
             je diptWord
             cmp bufferRoute[0], 't'
@@ -63,37 +64,57 @@ include archivos.asm
             jmp menu
 
     fileUpload:
-        openFile bufferRoute
+        descomposeWords 6d
+        openFile newWord
         readFile
         closeFile
-        print bufferFile
-        readUntilEnter bufferKey
         jmp menu
 
-    countDipt:
+    count:
         descomposeWords 7d
-        iterateWord
 
-        xor bx, bx
-        xor cx, cx
-        print totalDipt
-        mov bl, counter
-        printRegister bl
-        ImprimirEspacio al
-        print totalHiato
-        mov bh, counterHiato
-        printRegister bh
-        ImprimirEspacio al
-        print totalTript
-        mov cl, counterTript
-        printRegister cl
-        
-        readUntilEnter bufferKey
+        cmp newWord[0], "d"
+        je countDipt
+        ; cmp newWord[0], "t"
+        ; je countTript
+        ; cmp newWord[0], "h"
+        ; je countHiato
+        ; cmp newWord[0], "p"
+        ; je countWord
+
+    countDipt:
+        xor di, di
+        ciclo:
+            xor si, si
+            xor ax, ax
+            clearBuffer wordIndividual
+            ciclo2:
+                mov ah, bufferFile[di]
+                mov wordIndividual[si], ah
+                inc di
+                inc si
+                cmp bufferFile[di], 24h     ; Compara el "$"
+                je exit
+                cmp bufferFile[di], 20h     ; Compara el " "
+                jne ciclo2
+            iterateWord wordIndividual
+
+            inc di
+            cmp bufferFile[di], 24h
+            jne ciclo
+        exit:
+            xor bx, bx
+            iterateWord wordIndividual
+
+            print totalDipt
+            mov bl, counter
+            printRegister bl
+            readUntilEnter bufferKey
         jmp menu
 
     diptWord:
         descomposeWords 9d
-        iterateWord
+        iterateWord newWord
         
         cmp counter, 0
         jne verifyDipt
@@ -134,7 +155,7 @@ include archivos.asm
 
     triptWord:
         descomposeWords 10d
-        iterateWord
+        iterateWord newWord
         cmp counterTript, 0
         jne verifyTript
         print theWord
@@ -152,7 +173,7 @@ include archivos.asm
 
     hiatoWord:
         descomposeWords 6d
-        iterateWord
+        iterateWord newWord
         cmp counterHiato, 0
         jne verifyHiato
         print theWord
