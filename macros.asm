@@ -368,3 +368,36 @@ clearBuffer macro buffer
     pop di
 
 ENDM
+
+countWords MACRO contador, msgOutput
+    local ciclo, ciclo2, exit
+
+    xor di, di
+    ciclo:
+        xor si, si
+        xor ax, ax
+        clearBuffer wordIndividual
+        ciclo2:
+            mov ah, bufferFile[di]
+            mov wordIndividual[si], ah
+            inc di
+            inc si
+            cmp bufferFile[di], 24h     ; Compara el "$"
+            je exit
+            cmp bufferFile[di], 20h     ; Compara el " "
+            jne ciclo2
+        iterateWord wordIndividual
+        add counterTotalWords, 1
+
+        inc di
+        cmp bufferFile[di], 24h
+        jne ciclo
+    exit:
+        xor bx, bx
+        iterateWord wordIndividual
+        add counterTotalWords, 1
+
+        print msgOutput
+        mov bl, contador
+        Imprimir8bits bl
+ENDM

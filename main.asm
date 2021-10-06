@@ -18,6 +18,7 @@ include archivos.asm
     totalDipt db "El total de diptongos es: $"
     totalHiato db "El total de hiatos es: $"
     totalTript db "El total de triptongos es: $"
+    totalWords db "El total de palabras es: $"
     theWord db "La palabra $"
     msgIsDiptCrec db " es diptongo tipo creciente $"
     msgIsDiptDec db " es diptongo tipo decreciente $"
@@ -33,6 +34,7 @@ include archivos.asm
     counterHiato db 0
     counterTript db 0
     counterDipt db 0
+    counterTotalWords db 0
     handle dw ?, 0
     isDiptCrec db 0
     isDiptDec db 0
@@ -75,41 +77,31 @@ include archivos.asm
 
         cmp newWord[0], "d"
         je countDipt
-        ; cmp newWord[0], "t"
-        ; je countTript
-        ; cmp newWord[0], "h"
-        ; je countHiato
-        ; cmp newWord[0], "p"
-        ; je countWord
+        cmp newWord[0], "t"
+        je countTript
+        cmp newWord[0], "h"
+        je countHiato
+        cmp newWord[0], "p"
+        je countTotalWords
 
     countDipt:
-        xor di, di
-        ciclo:
-            xor si, si
-            xor ax, ax
-            clearBuffer wordIndividual
-            ciclo2:
-                mov ah, bufferFile[di]
-                mov wordIndividual[si], ah
-                inc di
-                inc si
-                cmp bufferFile[di], 24h     ; Compara el "$"
-                je exit
-                cmp bufferFile[di], 20h     ; Compara el " "
-                jne ciclo2
-            iterateWord wordIndividual
+        countWords counter, totalDipt
+        readUntilEnter bufferKey
+        jmp menu
 
-            inc di
-            cmp bufferFile[di], 24h
-            jne ciclo
-        exit:
-            xor bx, bx
-            iterateWord wordIndividual
+    countTript:
+        countWords counterTript, totalTript
+        readUntilEnter bufferKey
+        jmp menu
 
-            print totalDipt
-            mov bl, counter
-            Imprimir8bits bl
-            readUntilEnter bufferKey
+    countHiato:
+        countWords counterHiato, totalHiato
+        readUntilEnter bufferKey
+        jmp menu
+
+    countTotalWords:
+        countWords counterTotalWords, totalWords
+        readUntilEnter bufferKey
         jmp menu
 
     diptWord:
