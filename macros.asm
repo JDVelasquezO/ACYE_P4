@@ -457,6 +457,7 @@ colorWord MACRO wordInd
         je colorHomo
         cmp ah, "u"
         je colorHomo
+        CharColor wordInd[si], 0111b
         jmp returnDiptCresc
 
     diptDec:
@@ -471,6 +472,7 @@ colorWord MACRO wordInd
         je colorHiato
         cmp ah, "a"
         je colorHiato
+        CharColor wordInd[si], 0111b
         jmp returnDiptCresc
 
     verifyThirdLetter:
@@ -478,18 +480,24 @@ colorWord MACRO wordInd
         je colorTript
         cmp bl, "u"
         je colorTript
+        jmp colorHomo
 
     colorHomo:
         CharColor wordInd[si], 0010b
         CharColor wordInd[si+1], 0010b
+        inc si
         jmp returnDiptCresc
 
     colorTript:
         CharColor wordInd[si], 1110b
+        CharColor wordInd[si+1], 1110b
+        CharColor wordInd[si+2], 1110b
+        add si, 2
         jmp returnDiptCresc
 
     colorHiato:
         CharColor wordInd[si], 0100b
+        CharColor wordInd[si+1], 0100b
         jmp returnDiptCresc
 
     fin:
@@ -521,6 +529,6 @@ colorWords MACRO
         cmp bufferFile[di], 24h
         jne ciclo
     exit:
-        colorWord wordIndividual
         ; print wordIndividual
+        colorWord wordIndividual
 ENDM
