@@ -28,6 +28,7 @@ include archivos.asm
     msgIsNotDipt db " no es diptongo $"
     msgIsNotTript db " no es triptongo $"
     msgIsNotHiato db " no es hiato $"
+    blankSpace db " $"
     test_info db "Test aqui $"
     newWord db 50 dup("$"), "$"
     counter db 0
@@ -75,6 +76,8 @@ include archivos.asm
     count:
         descomposeWords 7d
 
+        cmp bufferRoute[2], "l"
+        je color
         cmp newWord[0], "d"
         je countDipt
         cmp newWord[0], "t"
@@ -101,6 +104,11 @@ include archivos.asm
 
     countTotalWords:
         countWords counterTotalWords, totalWords
+        readUntilEnter bufferKey
+        jmp menu
+
+    color:
+        colorWords
         readUntilEnter bufferKey
         jmp menu
 

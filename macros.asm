@@ -100,7 +100,7 @@ CadenaColor MACRO cadena, cantidad, inicio, fin
     pop ax
 ENDM
 
-CharColor MACRO char
+CharColor MACRO char, color
     push ax
     push bx
     push cx
@@ -109,7 +109,7 @@ CharColor MACRO char
     mov al, char     ; Imprimir un caracter en específico
     mov ah, 09h     ; Imprimir un char
     mov bh, 0       ; Página
-    mov bl, 11110011b   ; Color: el primer bit indica si parpadea o no, los otros 3 el color de fondo y los otros 4 el color
+    mov bl, color   ; Color: el primer bit indica si parpadea o no, los otros 3 el color de fondo y los otros 4 el color
     mov cx, 1       ; 1 Caracter
     int 10h
 
@@ -400,4 +400,127 @@ countWords MACRO contador, msgOutput
         print msgOutput
         mov bl, contador
         Imprimir8bits bl
+ENDM
+
+colorWord MACRO wordInd
+    local ciclo2, returnDiptCresc, returnIsTript, diptCresc, diptDec, dipHomo, verifyThirdLetter, colorHomo, colorHiato, colorTript, fin
+
+    ; print test_info
+    mov isDiptCrec, 0
+    mov isDiptDec, 0
+    mov isDiptHomo, 0
+
+    xor si, si
+    ciclo2:
+        xor ax, ax
+        xor bx, bx
+
+        mov al, wordInd[si]
+        mov ah, wordInd[si+1]
+        mov bl, wordInd[si+2]
+
+        cmp ah, 24h
+        je fin
+
+        cmp al, "i"
+        je diptCresc
+        cmp al, "u"
+        je diptCresc
+        cmp al, "a"
+        je diptDec
+        cmp al, "e"
+        je diptDec
+        cmp al, "o"
+        je diptDec
+        
+        CharColor wordInd[si], 0111b
+        returnDiptCresc:
+            ; printRegister al
+            inc si
+            cmp ah, 24h
+            jne ciclo2
+            jmp fin
+        returnIsTript:
+            add si, 2d
+            cmp wordInd[si+1], 24h
+            jne ciclo2
+            jmp fin
+
+    diptCresc:
+        cmp ah, "a"
+        je verifyThirdLetter
+        cmp ah, "e"
+        je verifyThirdLetter
+        cmp ah, "o"
+        je verifyThirdLetter
+        cmp ah, "i"
+        je colorHomo
+        cmp ah, "u"
+        je colorHomo
+        jmp returnDiptCresc
+
+    diptDec:
+        mov isDiptDec, 1
+        cmp ah, "i"
+        je colorHomo
+        cmp ah, "u"
+        je colorHomo
+        cmp ah, "e"
+        je colorHiato
+        cmp ah, "o"
+        je colorHiato
+        cmp ah, "a"
+        je colorHiato
+        jmp returnDiptCresc
+
+    verifyThirdLetter:
+        cmp bl, "i"
+        je colorTript
+        cmp bl, "u"
+        je colorTript
+
+    colorHomo:
+        CharColor wordInd[si], 0010b
+        CharColor wordInd[si+1], 0010b
+        jmp returnDiptCresc
+
+    colorTript:
+        CharColor wordInd[si], 1110b
+        jmp returnDiptCresc
+
+    colorHiato:
+        CharColor wordInd[si], 0100b
+        jmp returnDiptCresc
+
+    fin:
+        CharColor wordInd[si], 0111b
+ENDM
+
+colorWords MACRO
+    local ciclo, ciclo2, exit
+
+    xor di, di
+    ciclo:
+        xor si, si
+        xor ax, ax
+        clearBuffer wordIndividual
+        ciclo2:
+            mov ah, bufferFile[di]
+            mov wordIndividual[si], ah
+            inc di
+            inc si
+            cmp bufferFile[di], 24h     ; Compara el "$"
+            je exit
+            cmp bufferFile[di], 20h     ; Compara el " "
+            jne ciclo2
+        colorWord wordIndividual
+        ; print wordIndividual
+        print blankSpace
+
+        inc di
+        cmp bufferFile[di], 24h
+        jne ciclo
+    exit:
+        colorWord wordIndividual
+        ; print wordIndividual
 ENDM
