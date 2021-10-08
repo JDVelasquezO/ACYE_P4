@@ -1,0 +1,3 @@
+--- REPORTE GENERAL --- $
+El total de diptongos es: $018 $
+ La proporcion de diptongo es $020 $

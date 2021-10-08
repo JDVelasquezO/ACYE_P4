@@ -128,39 +128,39 @@ CharColor MACRO char, color
     pop ax 
 ENDM
 
-; convertir8bits macro registro
-;     local cualquiera,noz
-;     xor ax,ax
-;     mov al,registro
-;     mov cx,10
-;     mov bx,3
-;     cualquiera:
-;     xor dx,dx
-;     div cx
-;     push dx
-;     dec bx
-;     jnz cualquiera
-;     mov bx,3
-;     noz:
-;     pop dx
+convertir8bits macro param
+    local cualquiera,noz
+    xor ax,ax
+    mov al,param
+    mov cx,10
+    mov bx,3
+    cualquiera:
+    xor dx,dx
+    div cx
+    push dx
+    dec bx
+    jnz cualquiera
+    mov bx,3
+    noz:
+    pop dx
 
-;     push ax
-;     push bx
-;     push cx
-;     push dx
+    push ax
+    push bx
+    push cx
+    push dx
 
-;     add dl, 48
-;     mov param, dl
-;     WriteFile handle, param, 1
+    add dl, 48
+    mov param, dl
+    writeFile param
     
-;     pop dx
-;     pop cx
-;     pop bx
-;     pop ax
+    pop dx
+    pop cx
+    pop bx
+    pop ax
     
-;     dec bx
-;     jnz noz
-; endm
+    dec bx
+    jnz noz
+endm
 
 printRegister macro register
 	push ax
@@ -566,4 +566,46 @@ colorWords MACRO
     exit:
         ; print wordIndividual
         colorWord wordIndividual
+ENDM
+
+prop_dip MACRO
+    xor bx, bx
+    xor ax, ax
+    xor cx, cx
+
+    mov propGeneral, 0
+    mov counter, 0
+    countWords counter, totalDipt
+    mov al, cantPropDipt      ; 018
+    mov bl, 100                 ; 100
+    mul bl                    ; ax = 1800
+    ; mov dx, ax
+    ImprimirEspacio al
+    xor dx, dx
+    mov cl, counterTotalWords    ; 089
+    div cl                    ; al = 20
+    mov dx, ax
+
+    mov propGeneral, dl       
+    print msgPropDipt
+    Imprimir8bits dl        ; 20
+    print msgPer
+ENDM
+
+generateReport MACRO params
+
+    createFile input
+    writeFile titleReport
+    prop_dip
+    ; countWords counter, totalDipt
+    writeFile totalDipt
+    convertir8bits counter
+    writeFile lineBreak
+    writeFile msgPropDipt
+    convertir8bits propGeneral
+    writeFile lineBreak
+    closeFile
+
+    readUntilEnter bufferKey
+    jmp menu
 ENDM

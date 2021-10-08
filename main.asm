@@ -28,12 +28,13 @@ include archivos.asm
     msgIsNotDipt db " no es diptongo $"
     msgIsNotTript db " no es triptongo $"
     msgIsNotHiato db " no es hiato $"
-    msgPropDipt db " La proporcion de diptongo es $"
+    msgPropDipt db " La proporcion de diptongo es $"    
     msgPropTript db " La proporcion de triptongo es $"
     msgPropHiato db " La proporcion de hiato es $"
+    msgGenReport db " Generando reporte... $"
     msgPer db " % $"
     cantPropDipt db 0
-    ; msgNumPropDipt db 3 dup ("$"), "$"
+    propGeneral db 0
     blankSpace db " $"
     test_info db "Test aqui $"
     newWord db 50 dup("$"), "$"
@@ -47,6 +48,10 @@ include archivos.asm
     isDiptCrec db 0
     isDiptDec db 0
     isDiptHomo db 0
+    
+    input db "rep.txt", 0
+    titleReport db "--- REPORTE GENERAL --- $", 13, 10
+    lineBreak db " $", 13, 10
 .code
     ;description
     main PROC
@@ -73,6 +78,8 @@ include archivos.asm
             je hiatoWord
             cmp bufferRoute[0], "p"
             je prop
+            cmp bufferRoute[0], "r"
+            je report
             jmp menu
 
     fileUpload:
@@ -85,31 +92,14 @@ include archivos.asm
     prop:
         descomposeWords 5d
         cmp newWord[0], "d"
-        je prop_dip
+        je prop_dip_offset
         cmp newWord[0], "t"
         je prop_tript
         cmp newWord[0], "h"
         je prop_hiato
 
-    prop_dip:
-        xor bx, bx
-        xor ax, ax
-        xor cx, cx
-
-        countWords counter, totalDipt
-        mov al, cantPropDipt      ; 018
-        mov bl, 100                 ; 100
-        mul bl                    ; ax = 1800
-        ; mov dx, ax
-        ImprimirEspacio al
-        xor dx, dx
-        mov cl, counterTotalWords    ; 089
-        div cl                    ; al = 20
-        mov dx, ax
-
-        print msgPropDipt       
-        Imprimir8bits dl        ; 20
-        print msgPer
+    prop_dip_offset:
+        prop_dip
         readUntilEnter bufferKey
         jmp menu
 
@@ -273,6 +263,12 @@ include archivos.asm
         readUntilEnter bufferKey
         jmp menu
 
+    report:
+        print msgGenReport
+        generateReport
+        readUntilEnter bufferKey
+        jmp menu
+    
     exitGame:
         mov ax, 4C00H
         INT 21H

@@ -1,21 +1,21 @@
 ;============= Abrir archivo===========================
-; OpenFile macro buffer,handler
-;     local erro,fini
-;     mov AX,@data
-;     mov DS,AX
-;     mov ah,3dh
-;     mov al,02h
-;     lea dx,buffer
-;     int 21h
-;     ;jc Erro ; db con mensaje que debe existir en doc maestro
-;     mov handler,ax
-;     mov ax,0
-;     ;jmp fini
-;     erro:
-;     ;Print TItuloErrorArchivo
-;     mov ax,1
-;     fini:
-; endm
+OpenFile macro buffer,handler
+    local erro,fini
+    mov AX,@data
+    mov DS,AX
+    mov ah,3dh
+    mov al,02h
+    lea dx,buffer
+    int 21h
+    ;jc Erro ; db con mensaje que debe existir en doc maestro
+    mov handler,ax
+    mov ax,0
+    ;jmp fini
+    erro:
+    ;Print TItuloErrorArchivo
+    mov ax,1
+    fini:
+endm
 ;============== MACRO CERRAR ARCHIVO==============
 CloseFile macro handler
     mov ah,3eh
@@ -50,7 +50,7 @@ CreateFile macro buffer,handler
     mov ah,3eh
     int 21h
 endm
-; ========================= MACRO ESCRIBIR EN ARCHIVO YA CREADO =================
+; ; ========================= MACRO ESCRIBIR EN ARCHIVO YA CREADO =================
 
 WriteFile macro handler,buffer,numbytes
     mov AX,@data
@@ -92,4 +92,22 @@ closeFile macro
     mov bx, handle                      ;handle is a global variable
     int 21h
 
+ENDM
+
+createFile macro name
+    mov ah, 3ch
+    mov cx, 00h
+    lea dx, name
+
+    int 21h
+
+    mov handle, ax                          ;handle is a global variable
+ENDM
+
+writeFile macro content
+    mov ah, 40h
+    mov bx, handle                          ;handle is a global variable
+    mov cx, LENGTHOF content
+    lea dx, content
+    int 21h
 ENDM
