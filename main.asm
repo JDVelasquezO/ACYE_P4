@@ -28,6 +28,12 @@ include archivos.asm
     msgIsNotDipt db " no es diptongo $"
     msgIsNotTript db " no es triptongo $"
     msgIsNotHiato db " no es hiato $"
+    msgPropDipt db " La proporcion de diptongo es $"
+    msgPropTript db " La proporcion de triptongo es $"
+    msgPropHiato db " La proporcion de hiato es $"
+    msgPer db " % $"
+    cantPropDipt db 0
+    ; msgNumPropDipt db 3 dup ("$"), "$"
     blankSpace db " $"
     test_info db "Test aqui $"
     newWord db 50 dup("$"), "$"
@@ -35,6 +41,7 @@ include archivos.asm
     counterHiato db 0
     counterTript db 0
     counterDipt db 0
+    counterChar db 0
     counterTotalWords db 0
     handle dw ?, 0
     isDiptCrec db 0
@@ -64,6 +71,8 @@ include archivos.asm
             je triptWord
             cmp bufferRoute[0], 'h'
             je hiatoWord
+            cmp bufferRoute[0], "p"
+            je prop
             jmp menu
 
     fileUpload:
@@ -71,6 +80,81 @@ include archivos.asm
         openFile newWord
         readFile
         closeFile
+        jmp menu
+
+    prop:
+        descomposeWords 5d
+        cmp newWord[0], "d"
+        je prop_dip
+        cmp newWord[0], "t"
+        je prop_tript
+        cmp newWord[0], "h"
+        je prop_hiato
+
+    prop_dip:
+        xor bx, bx
+        xor ax, ax
+        xor cx, cx
+
+        countWords counter, totalDipt
+        mov al, cantPropDipt      ; 018
+        mov bl, 100                 ; 100
+        mul bl                    ; ax = 1800
+        ; mov dx, ax
+        ImprimirEspacio al
+        xor dx, dx
+        mov cl, counterTotalWords    ; 089
+        div cl                    ; al = 20
+        mov dx, ax
+
+        print msgPropDipt       
+        Imprimir8bits dl        ; 20
+        print msgPer
+        readUntilEnter bufferKey
+        jmp menu
+
+    prop_tript:
+        xor bx, bx
+        xor ax, ax
+        xor cx, cx
+
+        countWords counterTript, totalTript
+        mov al, cantPropDipt      ; 009
+        mov bl, 100                 ; 100
+        mul bl                    ; ax = 900
+        ; mov dx, ax
+        ImprimirEspacio al
+        xor dx, dx
+        mov cl, counterTotalWords    ; 089
+        div cl                    ; al = 10
+        mov dx, ax
+
+        print msgPropTript      
+        Imprimir8bits dl        ; 10
+        print msgPer
+        readUntilEnter bufferKey
+        jmp menu
+
+    prop_hiato:
+        xor bx, bx
+        xor ax, ax
+        xor cx, cx
+
+        countWords counterHiato, totalHiato
+        mov al, cantPropDipt      ; 005
+        mov bl, 100                 ; 100
+        mul bl                    ; ax = 500
+        ; mov dx, ax
+        ImprimirEspacio al
+        xor dx, dx
+        mov cl, counterTotalWords    ; 089
+        div cl                    ; al = 5
+        mov dx, ax
+
+        print msgPropHiato       
+        Imprimir8bits dl        ; 5
+        print msgPer
+        readUntilEnter bufferKey
         jmp menu
 
     count:

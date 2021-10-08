@@ -101,6 +101,7 @@ CadenaColor MACRO cadena, cantidad, inicio, fin
 ENDM
 
 CharColor MACRO char, color
+
     push ax
     push bx
     push cx
@@ -118,7 +119,8 @@ CharColor MACRO char, color
     int 10h
     inc dl
     mov ah, 02h     ; Desplazar el cursor
-    int 10h   
+    int 10h
+    ; --------------------------------------------------------
 
     pop dx
     pop cx
@@ -209,6 +211,26 @@ Imprimir8bits macro registro
     jnz noz
 endm
 
+Imprimir16bits macro registro
+    local cualquiera,noz
+    xor ax,ax
+    mov ax,registro
+    mov cx,10
+    mov bx,5
+    cualquiera:
+    xor dx,dx
+    div cx
+    push dx
+    dec bx
+    jnz cualquiera
+    mov bx,5
+    noz:
+    pop dx
+    ImprimirNumero dl
+    dec bx
+    jnz noz
+endm
+
 ImprimirCadena macro cadena
 	mov dx, offset cadena		; mover donde empieza el mensaje
 	mov ah, 09h 				; Para imprimir un caracter en pantalla
@@ -283,6 +305,8 @@ iterateWord MACRO wordInd
             jmp fin
 
     diptCresc:
+        cmp wordInd[si-1], "q"
+        je returnDiptCresc
         cmp ah, "a"
         je verifyThirdLetter
         cmp ah, "e"
@@ -372,6 +396,8 @@ ENDM
 countWords MACRO contador, msgOutput
     local ciclo, ciclo2, exit
 
+    mov counterTotalWords, 0
+    mov cantPropDipt, 0
     xor di, di
     ciclo:
         xor si, si
@@ -399,11 +425,12 @@ countWords MACRO contador, msgOutput
 
         print msgOutput
         mov bl, contador
+        mov cantPropDipt, bl
         Imprimir8bits bl
 ENDM
 
 colorWord MACRO wordInd
-    local ciclo2, returnDiptCresc, returnIsTript, diptCresc, diptDec, dipHomo, verifyThirdLetter, colorHomo, colorHiato, colorTript, fin
+    local ciclo2, returnDiptCresc, returnIsTript, diptCresc, diptDec, dipHomo, verifyThirdLetter, colorHomo, colorHiato, colorTript, fin, fin24h, paintLetter
 
     ; print test_info
     mov isDiptCrec, 0
@@ -437,9 +464,9 @@ colorWord MACRO wordInd
         returnDiptCresc:
             ; printRegister al
             inc si
-            cmp ah, 24h
+            cmp wordInd[si], 24h
             jne ciclo2
-            jmp fin
+            jmp fin24h
         returnIsTript:
             add si, 2d
             cmp wordInd[si+1], 24h
@@ -447,6 +474,8 @@ colorWord MACRO wordInd
             jmp fin
 
     diptCresc:
+        cmp wordInd[si-1], "q"
+        je paintLetter
         cmp ah, "a"
         je verifyThirdLetter
         cmp ah, "e"
@@ -457,6 +486,7 @@ colorWord MACRO wordInd
         je colorHomo
         cmp ah, "u"
         je colorHomo
+        paintLetter:
         CharColor wordInd[si], 0111b
         jmp returnDiptCresc
 
@@ -498,10 +528,15 @@ colorWord MACRO wordInd
     colorHiato:
         CharColor wordInd[si], 0100b
         CharColor wordInd[si+1], 0100b
+        inc si
         jmp returnDiptCresc
 
     fin:
+        cmp wordInd[si], 24h
+        je fin24h
         CharColor wordInd[si], 0111b
+    
+    fin24h:
 ENDM
 
 colorWords MACRO
