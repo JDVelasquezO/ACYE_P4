@@ -1,3 +1,7 @@
 --- REPORTE GENERAL --- $
 El total de diptongos es: $018 $
- La proporcion de diptongo es $020 $
+ La proporcion de diptongo es $0200% $3% $2% $ $
+El total de triptongos es: $009 $
+ La proporcion de triptongo es $0100% $5% $0% $ $
+El total de hiatos es: $005 $
+ La proporcion de hiato es $005 $

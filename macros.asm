@@ -592,18 +592,85 @@ prop_dip MACRO
     print msgPer
 ENDM
 
-generateReport MACRO params
+prop_tript MACRO 
+    xor bx, bx
+    xor ax, ax
+    xor cx, cx
+
+    mov propGeneral, 0
+    mov counterTript, 0
+    countWords counterTript, totalTript
+    mov al, cantPropDipt      ; 009
+    mov bl, 100                 ; 100
+    mul bl                    ; ax = 900
+    ; mov dx, ax
+    ImprimirEspacio al
+    xor dx, dx
+    mov cl, counterTotalWords    ; 089
+    div cl                    ; al = 10
+    mov dx, ax
+
+    mov propGeneral, dl
+    print msgPropTript      
+    Imprimir8bits dl        ; 10
+    print msgPer
+ENDM
+
+prop_hiato MACRO
+    xor bx, bx
+    xor ax, ax
+    xor cx, cx
+
+    mov propGeneral, 0
+    mov counterHiato, 0
+    countWords counterHiato, totalHiato
+    mov al, cantPropDipt      ; 005
+    mov bl, 100                 ; 100
+    mul bl                    ; ax = 500
+    ; mov dx, ax
+    ImprimirEspacio al
+    xor dx, dx
+    mov cl, counterTotalWords    ; 089
+    div cl                    ; al = 5
+    mov dx, ax
+
+    mov propGeneral, dl
+    print msgPropHiato       
+    Imprimir8bits dl        ; 5
+    print msgPer
+ENDM
+
+generateReport MACRO
 
     createFile input
     writeFile titleReport
+    
     prop_dip
-    ; countWords counter, totalDipt
     writeFile totalDipt
     convertir8bits counter
     writeFile lineBreak
     writeFile msgPropDipt
     convertir8bits propGeneral
+    convertir8bits msgPer
     writeFile lineBreak
+
+    prop_tript
+    writeFile totalTript
+    convertir8bits counterTript
+    writeFile lineBreak
+    writeFile msgPropTript
+    convertir8bits propGeneral
+    convertir8bits msgPer
+    writeFile lineBreak
+    
+    prop_hiato
+    writeFile totalHiato
+    convertir8bits counterHiato
+    writeFile lineBreak
+    writeFile msgPropHiato
+    convertir8bits propGeneral
+    writeFile lineBreak
+
     closeFile
 
     readUntilEnter bufferKey

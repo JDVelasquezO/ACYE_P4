@@ -51,6 +51,7 @@ include archivos.asm
     
     input db "rep.txt", 0
     titleReport db "--- REPORTE GENERAL --- $", 13, 10
+    titleReport db "--- CONTEOS Y PROPORCIONES --- $", 13, 10
     lineBreak db " $", 13, 10
 .code
     ;description
@@ -94,56 +95,22 @@ include archivos.asm
         cmp newWord[0], "d"
         je prop_dip_offset
         cmp newWord[0], "t"
-        je prop_tript
+        je prop_tript_offset
         cmp newWord[0], "h"
-        je prop_hiato
+        je prop_hiato_offset
 
     prop_dip_offset:
         prop_dip
         readUntilEnter bufferKey
         jmp menu
 
-    prop_tript:
-        xor bx, bx
-        xor ax, ax
-        xor cx, cx
-
-        countWords counterTript, totalTript
-        mov al, cantPropDipt      ; 009
-        mov bl, 100                 ; 100
-        mul bl                    ; ax = 900
-        ; mov dx, ax
-        ImprimirEspacio al
-        xor dx, dx
-        mov cl, counterTotalWords    ; 089
-        div cl                    ; al = 10
-        mov dx, ax
-
-        print msgPropTript      
-        Imprimir8bits dl        ; 10
-        print msgPer
+    prop_tript_offset:
+        prop_tript
         readUntilEnter bufferKey
         jmp menu
 
-    prop_hiato:
-        xor bx, bx
-        xor ax, ax
-        xor cx, cx
-
-        countWords counterHiato, totalHiato
-        mov al, cantPropDipt      ; 005
-        mov bl, 100                 ; 100
-        mul bl                    ; ax = 500
-        ; mov dx, ax
-        ImprimirEspacio al
-        xor dx, dx
-        mov cl, counterTotalWords    ; 089
-        div cl                    ; al = 5
-        mov dx, ax
-
-        print msgPropHiato       
-        Imprimir8bits dl        ; 5
-        print msgPer
+    prop_hiato_offset:
+        prop_hiato
         readUntilEnter bufferKey
         jmp menu
 
