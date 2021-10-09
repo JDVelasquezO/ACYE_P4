@@ -7,7 +7,7 @@ include archivos.asm
     headers db 	0ah,0dh,'Universidad de San Carlos de Guatemala',
                 0ah,0dh,'Arquitectura de Computadores y Ensambladores 1',
                 0ah,0dh,'Jose Daniel Velasquez Orozco',
-                0ah,0dh,'Practica 3',
+                0ah,0dh,'Practica 4',
                 0ah,0dh,'Ingrese x si desea cerrar el programa',
                 0ah,0dh,'$'
 
@@ -48,11 +48,13 @@ include archivos.asm
     isDiptCrec db 0
     isDiptDec db 0
     isDiptHomo db 0
+    rowColor db 0
     
     input db "rep.txt", 0
     titleReport db "--- REPORTE GENERAL --- $", 13, 10
-    titleReport db "--- CONTEOS Y PROPORCIONES --- $", 13, 10
+    subtitReport db "--- CONTEOS Y PROPORCIONES --- $", 13, 10
     lineBreak db " $", 13, 10
+    titleConc db "--- COINCIDENCIAS --- $", 13, 10
 .code
     ;description
     main PROC

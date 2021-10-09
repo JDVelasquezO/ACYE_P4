@@ -1,7 +1,55 @@
 --- REPORTE GENERAL --- $
+--- CONTEOS Y PROPORCIONES --- $
 El total de diptongos es: $018 $
- La proporcion de diptongo es $0200% $3% $2% $ $
+ La proporcion de diptongo es $020 % $ $
 El total de triptongos es: $009 $
- La proporcion de triptongo es $0100% $5% $0% $ $
+ La proporcion de triptongo es $010 % $ $
 El total de hiatos es: $005 $
- La proporcion de hiato es $005 $
+ La proporcion de hiato es $ $
+--- COINCIDENCIAS --- $
+aceitar$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+miedo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+miedo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+ciais$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es triptongo $ $
+millonario$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+millonario$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+aire$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+gaucho$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+monstruo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+monstruo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+huaico$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es triptongo $ $
+airoso$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+gourmet$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+muelas$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+muelas$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+hiato$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+hiato$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+cuando$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+cuando$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+pronunciacion$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+pronunciacion$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+pronunciacion$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+pronunciacion$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+aereo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es hiato $ $
+aereo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es hiato $ $
+cacao$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es hiato $ $
+teatro$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es hiato $ $
+leon$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es hiato $ $
+frecuentes$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+frecuentes$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+conjugaciones$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+conjugaciones$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+abrevieis$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es triptongo $ $
+fortuito$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo homogeneo $ $
+fortuito$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+fortuito$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+huaico$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es triptongo $ $
+acahual$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+acahual$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+codicieis$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es triptongo $ $
+fuego$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo creciente $ $
+fuego$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
+huaico$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es triptongo $ $
+acaricieis$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es triptongo $ $
+contagieis$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es triptongo $ $
+huaura$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ si es triptongo $ $

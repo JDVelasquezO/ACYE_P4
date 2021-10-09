@@ -114,10 +114,10 @@ CharColor MACRO char, color
     mov cx, 1       ; 1 Caracter
     int 10h
 
-    ; DESPLAZAR EL CURSOR PARA IMPRIMIR LA W DESPUES DE LA @
+    ; DESPLAZAR EL CURSOR 
     mov ah, 03h     ; Obtiene la posicion actual
     int 10h
-    inc dl
+    inc dl          ; Columnas
     mov ah, 02h     ; Desplazar el cursor
     int 10h
     ; --------------------------------------------------------
@@ -640,10 +640,127 @@ prop_hiato MACRO
     print msgPer
 ENDM
 
+printWord MACRO wordInd
+    local ciclo2, returnDiptCresc, returnIsTript, diptCresc, diptDec, dipHomo, verifyThirdLetter, isTript, isDipt, isHiato, isHomo, fin, addCounterDiptCrec
+
+    mov isDiptCrec, 0
+    mov isDiptDec, 0
+    mov isDiptHomo, 0
+
+    xor si, si
+    ciclo2:
+        xor ax, ax
+        xor bx, bx
+
+        mov al, wordInd[si]
+        mov ah, wordInd[si+1]
+        mov bl, wordInd[si+2]
+
+        cmp ah, 24h
+        je fin
+
+        cmp al, "i"
+        je diptCresc
+        cmp al, "u"
+        je diptCresc
+        cmp al, "a"
+        je diptDec
+        cmp al, "e"
+        je diptDec
+        cmp al, "o"
+        je diptDec
+        
+        returnDiptCresc:
+            inc si
+            cmp ah, 24h
+            jne ciclo2
+            jmp fin
+        returnIsTript:
+            add si, 2d
+            cmp wordInd[si+1], 24h
+            jne ciclo2
+            jmp fin
+
+    diptCresc:
+        cmp wordInd[si-1], "q"
+        je returnDiptCresc
+        cmp ah, "a"
+        je verifyThirdLetter
+        cmp ah, "e"
+        je verifyThirdLetter
+        cmp ah, "o"
+        je verifyThirdLetter
+        cmp ah, "i"
+        je dipHomo
+        cmp ah, "u"
+        je dipHomo
+        jmp returnDiptCresc
+
+    diptDec:
+        cmp ah, "i"
+        je isDipt
+        cmp ah, "u"
+        je isDipt
+        cmp ah, "e"
+        je isHiato
+        cmp ah, "o"
+        je isHiato
+        cmp ah, "a"
+        je isHiato
+        jmp returnDiptCresc
+
+    dipHomo:
+        writeFile wordInd
+        writeFile msgIsDiptHomo
+        writeFile lineBreak
+        cmp ah, "u"
+        je isDipt
+        cmp ah, "i"
+        je isDipt
+
+    verifyThirdLetter:
+        cmp bl, "i"
+        je isTript
+        cmp bl, "u"
+        je isTript
+        jmp addCounterDiptCrec
+
+    isTript:
+        writeFile wordInd
+        writeFile msgIsTript
+        writeFile lineBreak
+        jmp returnIsTript
+
+    isHiato:
+        writeFile wordInd
+        writeFile msgIsHiato
+        writeFile lineBreak
+        jmp returnDiptCresc
+
+    addCounterDiptCrec:
+        writeFile wordInd
+        writeFile msgIsDiptCrec
+        writeFile lineBreak
+        jmp isDipt
+
+    isDipt:
+        writeFile wordInd
+        writeFile msgIsDiptDec
+        writeFile lineBreak
+        jmp returnDiptCresc
+
+    isHomo:
+        add counter, 1
+        jmp returnDiptCresc
+
+    fin:
+ENDM
+
 generateReport MACRO
 
     createFile input
     writeFile titleReport
+    writeFile subtitReport
     
     prop_dip
     writeFile totalDipt
@@ -651,7 +768,7 @@ generateReport MACRO
     writeFile lineBreak
     writeFile msgPropDipt
     convertir8bits propGeneral
-    convertir8bits msgPer
+    writeFile msgPer
     writeFile lineBreak
 
     prop_tript
@@ -660,7 +777,7 @@ generateReport MACRO
     writeFile lineBreak
     writeFile msgPropTript
     convertir8bits propGeneral
-    convertir8bits msgPer
+    writeFile msgPer
     writeFile lineBreak
     
     prop_hiato
@@ -668,8 +785,32 @@ generateReport MACRO
     convertir8bits counterHiato
     writeFile lineBreak
     writeFile msgPropHiato
-    convertir8bits propGeneral
+    writeFile propGeneral
     writeFile lineBreak
+
+    writeFile titleConc
+
+    xor di, di
+    ciclo:
+        xor si, si
+        xor ax, ax
+        clearBuffer wordIndividual
+        ciclo2:
+            mov ah, bufferFile[di]
+            mov wordIndividual[si], ah
+            inc di
+            inc si
+            cmp bufferFile[di], 24h     ; Compara el "$"
+            je exit
+            cmp bufferFile[di], 20h     ; Compara el " "
+            jne ciclo2
+        printWord wordIndividual
+        inc di
+        cmp bufferFile[di], 24h
+        jne ciclo
+    exit:
+        xor bx, bx
+        printWord wordIndividual
 
     closeFile
 
