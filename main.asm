@@ -81,6 +81,8 @@ include archivos.asm
             je hiatoWord
             cmp bufferRoute[0], "p"
             je prop
+            cmp bufferRoute[0], "m"
+            je prop2
             cmp bufferRoute[0], "r"
             je report
             jmp menu
@@ -94,6 +96,15 @@ include archivos.asm
 
     prop:
         descomposeWords 5d
+        cmp newWord[0], "d"
+        je prop_dip_offset
+        cmp newWord[0], "t"
+        je prop_tript_offset
+        cmp newWord[0], "h"
+        je prop_hiato_offset
+
+    prop2:
+        descomposeWords 6d
         cmp newWord[0], "d"
         je prop_dip_offset
         cmp newWord[0], "t"

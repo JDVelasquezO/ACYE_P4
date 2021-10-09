@@ -101,6 +101,7 @@ CadenaColor MACRO cadena, cantidad, inicio, fin
 ENDM
 
 CharColor MACRO char, color
+    local comp
 
     push ax
     push bx
@@ -118,6 +119,12 @@ CharColor MACRO char, color
     mov ah, 03h     ; Obtiene la posicion actual
     int 10h
     inc dl          ; Columnas
+    cmp dl, 80
+    jnz comp
+    inc dh
+    mov dl, 0
+
+    comp:
     mov ah, 02h     ; Desplazar el cursor
     int 10h
     ; --------------------------------------------------------
