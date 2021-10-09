@@ -785,9 +785,9 @@ generateReport MACRO
     convertir8bits counterHiato
     writeFile lineBreak
     writeFile msgPropHiato
-    writeFile propGeneral
+    convertir8bits propGeneral
     writeFile lineBreak
-
+    writeFile lineBreak
     writeFile titleConc
 
     xor di, di

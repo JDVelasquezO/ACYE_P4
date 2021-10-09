@@ -14,7 +14,7 @@ include archivos.asm
     bufferRoute db 50 dup("$"), 0
     bufferKey db 50 dup("$"), "$"
     bufferFile db 1000 dup("$"), "$"            ; Guardar lectura
-    wordIndividual db 50 dup("$"), "$"
+    wordIndividual db 20 dup("$"), "$"
     totalDipt db "El total de diptongos es: $"
     totalHiato db "El total de hiatos es: $"
     totalTript db "El total de triptongos es: $"
