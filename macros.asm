@@ -342,6 +342,7 @@ iterateWord MACRO wordInd
 
     dipHomo:
         mov isDiptHomo, 1
+        mov isDiptDec, 0
         cmp ah, "u"
         je isDipt
         cmp ah, "i"
@@ -356,21 +357,17 @@ iterateWord MACRO wordInd
 
     isTript:
         add counterTript, 1
-        jmp returnIsTript
+        jmp fin
 
     isHiato:
         add counterHiato, 1
-        jmp returnDiptCresc
+        jmp fin
 
     addCounterDiptCrec:
         mov isDiptCrec, 1
         jmp isDipt
 
     isDipt:
-        add counter, 1
-        jmp returnDiptCresc
-
-    isHomo:
         add counter, 1
         jmp returnDiptCresc
 
@@ -420,6 +417,8 @@ countWords MACRO contador, msgOutput
             cmp bufferFile[di], 20h     ; Compara el " "
             jne ciclo2
         iterateWord wordIndividual
+        ; print wordIndividual
+        ; print lineBreak
         add counterTotalWords, 1
 
         inc di
@@ -428,6 +427,8 @@ countWords MACRO contador, msgOutput
     exit:
         xor bx, bx
         iterateWord wordIndividual
+        ; print wordIndividual
+        ; print lineBreak
         add counterTotalWords, 1
 
         print msgOutput
@@ -717,13 +718,10 @@ printWord MACRO wordInd
         jmp returnDiptCresc
 
     dipHomo:
-        writeFile wordInd
-        writeFile msgIsDiptHomo
-        writeFile lineBreak
         cmp ah, "u"
-        je isDipt
+        je isHomo
         cmp ah, "i"
-        je isDipt
+        je isHomo
 
     verifyThirdLetter:
         cmp bl, "i"
@@ -742,23 +740,25 @@ printWord MACRO wordInd
         writeFile wordInd
         writeFile msgIsHiato
         writeFile lineBreak
-        jmp returnDiptCresc
+        jmp fin
 
     addCounterDiptCrec:
         writeFile wordInd
         writeFile msgIsDiptCrec
         writeFile lineBreak
-        jmp isDipt
+        jmp fin
 
     isDipt:
         writeFile wordInd
         writeFile msgIsDiptDec
         writeFile lineBreak
-        jmp returnDiptCresc
+        jmp fin
 
     isHomo:
-        add counter, 1
-        jmp returnDiptCresc
+        writeFile wordInd
+        writeFile msgIsDiptHomo
+        writeFile lineBreak
+        jmp fin
 
     fin:
 ENDM
