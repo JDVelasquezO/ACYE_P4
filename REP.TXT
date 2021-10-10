@@ -4,8 +4,8 @@ El total de diptongos es: $018 $
  La proporcion de diptongo es $020 % $ $
 El total de triptongos es: $009 $
  La proporcion de triptongo es $010 % $ $
-El total de hiatos es: $004 $
- La proporcion de hiato es $004 $
+El total de hiatos es: $005 $
+ La proporcion de hiato es $005 $
  $
 --- COINCIDENCIAS --- $
 aceitar$$$$$$$$$$$$$$ es diptongo tipo decreciente $ $
@@ -38,3 +38,4 @@ huaico$$$$$$$$$$$$$$$ si es triptongo $ $
 acaricieis$$$$$$$$$$$ si es triptongo $ $
 contagieis$$$$$$$$$$$ si es triptongo $ $
 huaura$$$$$$$$$$$$$$$ si es triptongo $ $
+antiinflamatorio$$$$ si es hiato $ $

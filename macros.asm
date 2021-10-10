@@ -314,6 +314,8 @@ iterateWord MACRO wordInd
     diptCresc:
         cmp wordInd[si-1], "q"
         je returnDiptCresc
+        cmp ah, al
+        je isHiato
         cmp ah, "a"
         je verifyThirdLetter
         cmp ah, "e"
@@ -327,6 +329,8 @@ iterateWord MACRO wordInd
         jmp returnDiptCresc
 
     diptDec:
+        cmp ah, al
+        je isHiato
         mov isDiptDec, 1
         cmp ah, "i"
         je isDipt
@@ -484,6 +488,8 @@ colorWord MACRO wordInd
     diptCresc:
         cmp wordInd[si-1], "q"
         je paintLetter
+        cmp al, ah
+        je colorHiato
         cmp ah, "a"
         je verifyThirdLetter
         cmp ah, "e"
@@ -500,6 +506,8 @@ colorWord MACRO wordInd
 
     diptDec:
         mov isDiptDec, 1
+        cmp al, ah
+        je colorHiato
         cmp ah, "i"
         je colorHomo
         cmp ah, "u"
@@ -692,6 +700,8 @@ printWord MACRO wordInd
     diptCresc:
         cmp wordInd[si-1], "q"
         je returnDiptCresc
+        cmp ah, al
+        je isHiato
         cmp ah, "a"
         je verifyThirdLetter
         cmp ah, "e"
@@ -705,6 +715,8 @@ printWord MACRO wordInd
         jmp returnDiptCresc
 
     diptDec:
+        cmp ah, al
+        je isHiato
         cmp ah, "i"
         je isDipt
         cmp ah, "u"
@@ -734,7 +746,7 @@ printWord MACRO wordInd
         writeFile wordInd
         writeFile msgIsTript
         writeFile lineBreak
-        jmp returnIsTript
+        jmp fin
 
     isHiato:
         writeFile wordInd
